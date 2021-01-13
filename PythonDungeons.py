@@ -1,5 +1,10 @@
+#An Endless Procedural Dungeon Crawller Based On The Popular BBC Show Doctor Who
+#Imports
+
 from random import randrange
 from os import system
+
+#Variables
 player = {"name": "The Doctor", "armour_rating": 1, "weapon_name": "Sonic Screwdriver",
           "weapon_rating": 30, "hp": 100}
 enemy_names = ["Cybermen", "Sontaran", "Weeping Angel", "Dalek"]
@@ -12,8 +17,11 @@ new_level = True
 NearPlayer = False
 level = 0
 
+#Initialize
+
 system("cls")
 
+#Functions
 
 def attackEnemy(name):
     enemies[name][2] = enemies[name][2] - player["weapon_rating"]
