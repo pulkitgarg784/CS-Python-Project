@@ -24,8 +24,8 @@ system("cls")
 #Functions
 
 def attackEnemy(name):
-    enemies[name][2] = enemies[name][2] - player["weapon_rating"]
-    if enemies[name][2] > 0:
+    enemies[name][2] = enemies[name][2] - player["weapon_rating"] # subtract health.. health = health - damage
+    if enemies[name][2] < 0:
         enemies[name][2] = 0  # if health is less than 0, round it up to 0
 
 
@@ -42,6 +42,7 @@ def spawn_enemy():
 
 def playerMovement():
     move = input("(W/A/S/D to move, F for Attack: )")
+
     if move == "w" and playerPos[0] > 0:
         playerPos[0] -= 1
     elif move == "a" and playerPos[1] > 0:
@@ -82,19 +83,19 @@ def render():
     system("cls")
     bg = '-'
     gen = [int(size)*[bg] for i in range(int(size))]
-    gen[playerPos[0]][playerPos[1]] = '@'
+    gen[playerPos[0]][playerPos[1]] = '@'#player
     for i in enemies:
         if enemies[i][2] > 0:
             gen[enemies[i][0]][enemies[i][1]] = "M"
-        else:
+        else: #enemy is dead
             gen[enemies[i][0]][enemies[i][1]] = "X"
-    gen[checkpoint[0]][checkpoint[1]] = "D"
+    gen[checkpoint[0]][checkpoint[1]] = "D" #door
     print('\n'.join(' '.join(row) for row in gen))
 
 
 def enemyAI():
     for i in enemies:
-        if enemies[i][2] > 0:  # number of enemies is more than 0
+        if enemies[i][2] > 0:  # health is more than 0
             # enemies[i][0] is x coordinate of enemy, enemies[i][1] is y coordinate
             if enemies[i][0] == playerPos[0] and enemies[i][1] == playerPos[1]:
                 attackEnemy(i)
@@ -126,7 +127,7 @@ def enemyAI():
                 NearPlayer = True
             else:
                 NearPlayer = False
-            if NearPlayer == False:
+            if NearPlayer == False: #if not near player, move
                 c_move = randrange(1, 6)
                 if c_move == 1 and enemies[i][0] < int(size) - 1:
                     enemies[i][0] += 1
@@ -137,7 +138,7 @@ def enemyAI():
                 elif c_move == 5 and enemies[i][1] > 0:
                     enemies[i][1] -= 1
 
-
+#main loop
 while player["hp"] > 0:  # player is alive
     if new_level == True:
         checkpoint = [randrange(0, int(size)), randrange(0, int(size))]
@@ -147,6 +148,7 @@ while player["hp"] > 0:  # player is alive
         level += 1
         new_level = False
     elif new_level == False:
+        print("Level "+ str(level))
         print("NAME:  " + player["name"])
         print("HEALTH:  " + str(player["hp"]))
         print("WEAPON:  " +
@@ -159,7 +161,7 @@ while player["hp"] > 0:  # player is alive
         playerMovement()
         enemyAI()
         render()
-        if checkpoint[0] == playerPos[0] and checkpoint[1] == playerPos[1]:
+        if checkpoint[0] == playerPos[0] and checkpoint[1] == playerPos[1]: # if we have reached the door
             new_level = True
 
 print()
